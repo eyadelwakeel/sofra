@@ -33,7 +33,7 @@ class RestaurantController extends Controller
             'comment' => 'nullable|string',
         ]);
         $review = $restaurant->reviews()->create([
-            'user_id' => $request->user()->id ?? null,
+            'user_id' => $request->user()->id ?? 1 ,
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
@@ -45,6 +45,9 @@ class RestaurantController extends Controller
         $restaurant = Restaurant::find($restaurant_id);
         if (!$restaurant) {
             return $this->api_error_massage('Restaurant Not Found');
+        }
+        if ($restaurant->reviews()->count() == 0) {
+            return $this->api_success_massage('No Reviews Found For This Restaurant');
         }
         $reviews = [
             'average_rating' => round($restaurant->reviews()->avg('rating')),
