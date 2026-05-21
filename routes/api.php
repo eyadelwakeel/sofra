@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\v1\RestaurantController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\OrderController;
+use App\Http\Controllers\Api\v1\ItemController;
 
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -40,4 +41,5 @@ Route::post('/orders', [OrderController::class, 'place_order']);
 Route::get('/orders', [OrderController::class, 'get_orders']);
 Route::get('/orders/{order_id}', [OrderController::class, 'get_order_details']);   
 
-
+// items of restaurant
+Route::post('/restaurant-items', [ItemController::class, 'restaurant_items']);
