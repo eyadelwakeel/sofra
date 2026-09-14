@@ -59,5 +59,15 @@ class AuthController extends Controller
     return $this->api_success_massage('User Login Successfully', $data);
 }
 
+public function logout(Request $request)
+{
+    $user = $request->user();
 
+    // Revoke the token that was used to authenticate the current request
+    $user->currentAccessToken()->delete();
+
+    return $this->api_success_massage('User Logged Out Successfully');
+
+
+}
 }

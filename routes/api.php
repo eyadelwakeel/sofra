@@ -29,17 +29,19 @@ Route::get('/restaurants', [GeneralController::class, 'restaurants']);
 Route::get('/items', [GeneralController::class, 'items']);
 // Route::get('/orders', [GeneralController::class, 'orders']);
 Route::post('/search/restaurants', [GeneralController::class, 'get_resturant_by_search']);
+Route::post('/search/items', [GeneralController::class, 'get_item_by_search']);
+Route::post('/contact-us', [GeneralController::class, 'contact_us'])->middleware('auth:sanctum');
 
 
 //  restaurant
 Route::get('/restaurants/{restaurant_id}/items', [RestaurantController::class, 'itemsOfRestaurant']);
-Route::post('/restaurants/{restaurant_id}/reviews', [RestaurantController::class, 'setReviewsOfRestaurant']);
+Route::post('/restaurants/{restaurant_id}/reviews', [RestaurantController::class, 'setReviewsOfRestaurant'])->middleware('auth:sanctum');
 Route::get('/restaurants/{restaurant_id}/reviews', [RestaurantController::class, 'getReviewsOfRestaurant']);
 
 // order
-Route::post('/orders', [OrderController::class, 'place_order']);
-Route::get('/orders', [OrderController::class, 'get_orders']);
-Route::get('/orders/{order_id}', [OrderController::class, 'get_order_details']);   
+Route::post('/orders', [OrderController::class, 'place_order'])->middleware('auth:sanctum');
+Route::get('/orders', [OrderController::class, 'get_orders'])->middleware('auth:sanctum');
+Route::get('/orders/{order_id}', [OrderController::class, 'get_order_details'])->middleware('auth:sanctum');   
 
 // items of restaurant
 Route::post('/restaurant-items', [ItemController::class, 'restaurant_items']);

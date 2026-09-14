@@ -28,8 +28,7 @@ class OrderController extends Controller
         ]);
 
         $item_ids = collect($request->items)
-            ->pluck('id')
-            ->toArray();
+            ->pluck('id');
 
         if ($item_ids->duplicates()->isNotEmpty()) {
 
@@ -64,7 +63,7 @@ class OrderController extends Controller
 
         $total_price = $requested_price + $delivery_fee;
 
-        $user = Auth::user();
+        $user = Auth::user() ?? null;
 
         DB::beginTransaction();
 
@@ -100,7 +99,8 @@ class OrderController extends Controller
             foreach ($request->items as $item) {
 
                 $attach_data[$item['id']] = [
-                    'quantity' => $item['quantity']
+                    'quantity' => $item['quantity'],
+                    'price' => $items[$item['id']]->price * $item['quantity'],
                 ];
             }
 
@@ -126,11 +126,11 @@ class OrderController extends Controller
 
     public function get_orders(Request $request)
     {
-        // if (!$request->user()) {
-        //     return response()->json(['message' => 'Unauthorized'], 401);
-        // }
-        //return reeoe massage if user has no orders
+        if (!$request->user()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
         $orders = Order::where('user_id', $request->user()->id)->with('items')->get();
+        // $orders = Order::where('user_id', "1")->with('items')->get();
         if ($orders->isEmpty()) {
             return response()->json(['message' => 'No orders found for this user'], 404);
         }

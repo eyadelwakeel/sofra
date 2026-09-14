@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+
+    public function contactUs()
+    {
+        return $this->hasMany(ContactUs::class);
+    }
 }

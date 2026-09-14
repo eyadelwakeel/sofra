@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class RestaurantController extends Controller
 {
@@ -32,8 +35,10 @@ class RestaurantController extends Controller
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string',
         ]);
+        $user = auth()->user();
         $review = $restaurant->reviews()->create([
-            'user_id' => $request->user()->id ?? 1 ,
+            'user_id' => $user->id,
+            'user_name' => $user->name,
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
@@ -51,7 +56,9 @@ class RestaurantController extends Controller
         }
         $reviews = [
             'average_rating' => round($restaurant->reviews()->avg('rating')),
-            'comments' => $restaurant->reviews()->pluck('comment')
+            'reviews' => $restaurant->reviews()
+                ->select('user_name', 'comment', 'rating')
+                ->get(),
         ];
         return $this->api_success_massage('Restaurant Reviews Retrieved Successfully', $reviews);
     }
